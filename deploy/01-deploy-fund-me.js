@@ -1,4 +1,5 @@
 const { networkConfig } = require("../helper-hardhat-config");
+const { network } = require("hardhat");
 
 // hre = hardhat runtime environment
 module.exports = async (hre) => {
@@ -7,7 +8,7 @@ module.exports = async (hre) => {
   const { deployer } = await getNamedAccounts();
   const chainId = network.config.chainId;
 
-  const ethUsdPriceFeedAddress = networkConfig[chainId][ethUsdPriceFeed];
+  // const ethUsdPriceFeedAddress = networkConfig[chainId][ethUsdPriceFeed];
 
   await deploy("FundMe", {
     from: deployer,
