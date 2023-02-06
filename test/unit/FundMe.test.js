@@ -26,5 +26,14 @@ describe("FundMe", async function () {
     it("Fails if you don't send enough ETH", async function () {
       await expect(fundMe.fund()).to.be.reverted;
     });
+
+    it("Should update the address to amount mapping", async function () {
+      const fundAmount = ethers.utils.parseEther("1"); // converts 1 ETH to wei, which has 18 zeros
+      await fundMe.fund({
+        value: fundAmount,
+      });
+      const addressToAmount = await fundMe.getAddressToAmountFunded(deployer);
+      assert.equal(addressToAmount.toString(), fundAmount.toString());
+    });
   });
 });
