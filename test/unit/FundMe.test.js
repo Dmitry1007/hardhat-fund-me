@@ -56,9 +56,9 @@ describe("FundMe", async function () {
       const accounts = await ethers.getSigners();
       const attacker = accounts[1];
       const attackerConnectedContract = await fundMe.connect(attacker);
-      await expect(attackerConnectedContract.withdraw()).to.be.revertedWith(
-        "FundMe__NotOwner"
-      );
+      await expect(
+        attackerConnectedContract.withdraw()
+      ).to.be.revertedWithCustomError(fundMe, "FundMe__NotOwner");
     });
 
     it("Withdraw ETH with a single funder", async function () {
