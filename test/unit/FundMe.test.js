@@ -35,5 +35,14 @@ describe("FundMe", async function () {
       const addressToAmount = await fundMe.getAddressToAmountFunded(deployer);
       assert.equal(addressToAmount.toString(), fundAmount.toString());
     });
+
+    it("Should add to funders array", async function () {
+      const fundAmount = ethers.utils.parseEther("1");
+      await fundMe.fund({
+        value: fundAmount,
+      });
+      const funder = await fundMe.getFunder(0);
+      assert.equal(funder, deployer);
+    });
   });
 });
