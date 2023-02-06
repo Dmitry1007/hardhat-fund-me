@@ -52,6 +52,13 @@ describe("FundMe", async function () {
       await fundMe.fund({ value: fundAmount });
     });
 
+    it("Only allows the owner of contract to withdraw funds", async function () {
+      const accounts = await ethers.getSigners();
+      const attacker = accounts[1];
+      const attackerConnectedContract = await fundMe.connect(attacker);
+      await expect(attackerConnectedContract.withdraw()).to.be.reverted;
+    });
+
     it("Withdraw ETH with a single funder", async function () {
       // Arrange
       const startingFundMeBalance = await fundMe.provider.getBalance(
