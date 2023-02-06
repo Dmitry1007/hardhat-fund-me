@@ -1,4 +1,4 @@
-const { assert } = require("chai");
+const { assert, expect } = require("chai");
 const { deployments, ethers } = require("hardhat");
 
 describe("FundMe", async function () {
@@ -19,6 +19,12 @@ describe("FundMe", async function () {
     it("should set the aggregator address correctly", async function () {
       const response = await fundMe.getPriceFeed();
       assert.equal(response, mockV3Aggregator.address);
+    });
+  });
+
+  describe("fund", async function () {
+    it("Fails if you don't send enough ETH", async function () {
+      await expect(fundMe.fund()).to.be.reverted;
     });
   });
 });
