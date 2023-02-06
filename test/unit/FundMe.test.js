@@ -47,13 +47,9 @@ describe("FundMe", async function () {
   });
 
   describe("withdraw", async function () {
-    let contractDeploymentGasCost;
     beforeEach(async function () {
       const fundAmount = ethers.utils.parseEther("1");
-      const transactionResponse = await fundMe.fund({ value: fundAmount });
-      const transactionReceipt = await transactionResponse.wait(1);
-      const { gasUsed, effectiveGasPrice } = transactionReceipt;
-      contractDeploymentGasCost = gasUsed.mul(effectiveGasPrice);
+      await fundMe.fund({ value: fundAmount });
     });
 
     it("Withdraw ETH from a single funder", async function () {
