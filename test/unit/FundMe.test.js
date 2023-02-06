@@ -16,7 +16,7 @@ describe("FundMe", async function () {
   });
 
   describe("constructor", async function () {
-    it("should set the aggregator address correctly", async function () {
+    it("Should set the aggregator address correctly", async function () {
       const response = await fundMe.getPriceFeed();
       assert.equal(response, mockV3Aggregator.address);
     });
@@ -43,6 +43,46 @@ describe("FundMe", async function () {
       });
       const funder = await fundMe.getFunder(0);
       assert.equal(funder, deployer);
+    });
+  });
+
+  describe("withdraw", async function () {
+    let contractDeploymentGasCost;
+    beforeEach(async function () {
+      const fundAmount = ethers.utils.parseEther("1");
+      const transactionResponse = await fundMe.fund({ value: fundAmount });
+      const transactionReceipt = await transactionResponse.wait(1);
+      const { gasUsed, effectiveGasPrice } = transactionReceipt;
+      contractDeploymentGasCost = gasUsed.mul(effectiveGasPrice);
+    });
+
+    it("Withdraw ETH from a single funder", async function () {
+      // Arrange
+      const startingFundMeBalance = await fundMe.provider.getBalance(
+        fundMe.address
+      );
+      const startingDeployerBalance = await fundMe.provider.getBalance(
+        deployer
+      );
+
+      // Act
+      const transactionResponse = await fundMe.withdraw();
+      const transactionReceipt = await transactionResponse.wait(1);
+      const { gasUsed, effectiveGasPrice } = transactionReceipt;
+      const gasCost = gasUsed.mul(effectiveGasPrice);
+
+      const endingFundMeBalance = await fundMe.provider.getBalance(
+        fundMe.address
+      );
+
+      const endingDeployerBalance = await fundMe.provider.getBalance(deployer);
+      // Assert
+
+      assert.equal(endingFundMeBalance, 0);
+      assert.equal(
+        startingFundMeBalance.add(startingDeployerBalance).toString(),
+        endingDeployerBalance.add(gasCost).toString()
+      );
     });
   });
 });
