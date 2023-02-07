@@ -20,7 +20,7 @@ contract FundMe {
     using PriceConverter for uint256;
 
     // State variables, _s means it's a var that will be stored in storage(expensive)
-    uint256 public constant MINIMUM_USD = 50 * 10**18;
+    uint256 public constant MINIMUM_USD = 20 * 10**18;
     address private immutable i_owner;
     address[] private s_funders;
     mapping(address => uint256) private s_addressToAmountFunded;
